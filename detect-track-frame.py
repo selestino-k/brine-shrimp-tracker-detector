@@ -14,7 +14,7 @@ def processVideo():
     counter_cache = []
     detection_classes = []
     count = 0
-    path = "videos/brine-shrimp.mp4" #360p video, so 640px (x) x 360px (y) resolution
+    path = "videos/micro-shrimp.mp4" #360p video, so 640px (x) x 360px (y) resolution
     #read video
     vs = cv.VideoCapture(path)
     #load the model
@@ -108,11 +108,16 @@ def processVideo():
 
 
 def drawBox(data, image, name):
+    # To draw boxes on the frame, 
     x1, y1, x2, y2, conf, id = data
     p1 = (int(x1), int(y1))
     p2 = (int(x2), int(y2))
+    # Format confidence as percentage
+    conf_percentage = int(conf * 100)
+    # Create label with class name and confidence
+    label = f"{name}: {conf_percentage}%"
     cv.rectangle(image, p1, p2, (0, 0, 255), 3)
-    cv.putText(image, name, p1, cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 3)
+    cv.putText(image, label, p1, cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 3)
 
     return image
 
