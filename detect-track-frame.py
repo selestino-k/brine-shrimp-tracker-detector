@@ -18,7 +18,7 @@ def processVideo():
     #read video
     vs = cv.VideoCapture(path)
     #load the model
-    model = YOLO('models/bs-detect-model.pt')
+    model = YOLO('models/best.onnx')
 
     object_tracker = DeepSort(max_iou_distance=0.7,
                               max_age=5,
@@ -108,16 +108,39 @@ def processVideo():
 
 
 def drawBox(data, image, name):
-    # To draw boxes on the frame, 
     x1, y1, x2, y2, conf, id = data
     p1 = (int(x1), int(y1))
     p2 = (int(x2), int(y2))
+    
     # Format confidence as percentage
     conf_percentage = int(conf * 100)
-    # Create label with class name and confidence
     label = f"{name}: {conf_percentage}%"
+    
+    # Draw the rectangle for bounding box
     cv.rectangle(image, p1, p2, (0, 0, 255), 3)
-    cv.putText(image, label, p1, cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 3)
+    
+    # Get text size for background rectangle
+    text_size = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.7, 3)[0]
+    
+    # Color based on confidence
+    if conf > 0.7:
+        color = (0, 255, 0)  # Green for high confidence
+    elif conf > 0.5:
+        color = (0, 255, 255)  # Yellow for medium confidence
+    else:
+        color = (0, 0, 255)  # Red for low confidence
+
+
+ # Draw background rectangle for text
+    cv.rectangle(image, 
+                (p1[0], p1[1] - text_size[1] - 5), 
+                (p1[0] + text_size[0], p1[1]), 
+                color, 
+                -1)  # -1 fills the rectangle
+
+    
+    # Draw the label text with confidence
+    cv.putText(image, label, p1, cv.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2) # Adjusted font size to 0.7 and thickness to 2
 
     return image
 

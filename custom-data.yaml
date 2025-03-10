@@ -1,0 +1,6 @@
+train: C:\Users\sandi\Documents\Proyek AI ML Lab Bioscience\BSLT\data3a\train
+val: C:\Users\sandi\Documents\Proyek AI ML Lab Bioscience\BSLT\data3a\val
+
+nc: 1
+
+names: ['Brine Srimp']
